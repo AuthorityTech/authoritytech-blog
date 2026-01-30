@@ -55,55 +55,55 @@ export default async function BlogPost({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 font-medium">
-            ← Back to Blog
+    <div className="min-h-dvh bg-background">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <div className="mb-10">
+          <Link
+            href="/"
+            className="text-sm font-ui text-muted-foreground transition-opacity duration-150 ease-out hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-border focus:ring-offset-0 rounded-md"
+          >
+            ← Back
           </Link>
         </div>
-      </header>
-
-      <article className="max-w-4xl mx-auto px-4 py-12">
         {post.featuredImage && (
-          <div className="relative w-full h-[400px] rounded-lg overflow-hidden mb-8">
+          <div className="relative w-full h-64 rounded-lg overflow-hidden mb-8 border border-border">
             <Image
               src={post.featuredImage}
               alt={post.featuredImageAlt || post.title}
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 1200px) 100vw, 1200px"
+              sizes="(max-width: 1200px) 100vw, 896px"
             />
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
-          {post.topic && (
-            <span className="inline-block px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full mb-4">
-              {post.topic}
-            </span>
-          )}
+        {post.topic && (
+          <span className="text-3xs font-medium tracking-wide uppercase font-ui text-muted-foreground">
+            {post.topic}
+          </span>
+        )}
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            {post.title}
-          </h1>
+        <h1 className="mt-2 text-2xl font-medium tracking-tight font-serif text-foreground text-balance">
+          {post.title}
+        </h1>
 
-          <p className="text-xl text-gray-600 mb-6">{post.description}</p>
+        <p className="mt-3 text-sm font-ui text-muted-foreground text-pretty">
+          {post.description}
+        </p>
 
-          <time className="block text-sm text-gray-500 mb-8 pb-8 border-b border-gray-200">
-            {new Date(post.publishDate).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </time>
+        <time className="mt-6 block text-xs font-ui text-muted-foreground tabular-nums border-b border-border pb-6">
+          {new Date(post.publishDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </time>
 
-          <div
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.body }}
-          />
-        </div>
+        <div
+          className="prose prose-sm max-w-none font-ui mt-8"
+          dangerouslySetInnerHTML={{ __html: post.body }}
+        />
       </article>
 
       {post.jsonLdSchema && (
@@ -113,9 +113,9 @@ export default async function BlogPost({ params }: Props) {
         />
       )}
 
-      <footer className="border-t border-gray-200 mt-24">
-        <div className="max-w-4xl mx-auto px-4 py-8 text-center text-gray-600">
-          <p>© {new Date().getFullYear()} AuthorityTech. All rights reserved.</p>
+      <footer className="border-t border-border mt-24 bg-background">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-center text-muted-foreground font-ui text-xs">
+          <p>© {new Date().getFullYear()} AuthorityTech</p>
         </div>
       </footer>
     </div>
