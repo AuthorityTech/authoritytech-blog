@@ -135,7 +135,7 @@ function PostCard({ post }: { post: BlogPost }) {
           {post.description}
         </p>
         <time className="mt-4 block text-xs font-ui text-muted-foreground tabular-nums">
-          {new Date(post.publishDate).toLocaleDateString("en-US", {
+          {new Date(post.publishDate + 'T12:00:00').toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
