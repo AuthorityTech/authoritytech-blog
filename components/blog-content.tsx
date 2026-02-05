@@ -89,6 +89,22 @@ function ChevronDownIcon({ className }: { className?: string }) {
   );
 }
 
+const TOPIC_ACRONYMS = new Set(
+  ["pr", "ai", "geo", "aeo", "seo", "roi", "cmo", "ceo"].map((s) => s.toLowerCase())
+);
+
+/** Normalize topic for display: "pr-strategy" → "PR Strategy", "ai-visibility" → "AI Visibility" */
+function formatTopicForDisplay(topic: string): string {
+  const parts = topic.split(/[\s-]+/).filter(Boolean);
+  return parts
+    .map((part) => {
+      const lower = part.toLowerCase();
+      if (TOPIC_ACRONYMS.has(lower)) return lower.toUpperCase();
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join(" ");
+}
+
 function getUniqueTopics(posts: BlogPost[]): string[] {
   const topics = new Set<string>();
   posts.forEach((p) => {
@@ -125,7 +141,7 @@ function PostCard({ post }: { post: BlogPost }) {
       <div className="p-5">
         {post.topic && (
           <span className="text-3xs font-medium tracking-wide uppercase font-ui text-muted-foreground">
-            {post.topic}
+            {formatTopicForDisplay(post.topic)}
           </span>
         )}
         <h2 className="mt-2 font-serif font-medium text-foreground text-balance text-lg line-clamp-3">
@@ -252,7 +268,7 @@ export function BlogContent({ posts }: { posts: BlogPost[] }) {
             <option value="">All topics</option>
             {topics.map((topic) => (
               <option key={topic} value={topic}>
-                {topic}
+                {formatTopicForDisplay(topic)}
               </option>
             ))}
           </select>
