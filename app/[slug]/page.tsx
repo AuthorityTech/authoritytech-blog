@@ -124,6 +124,29 @@ export default async function BlogPost({ params }: Props) {
           className="prose prose-sm max-w-none font-ui mt-8"
           dangerouslySetInnerHTML={{ __html: post.body }}
         />
+
+        <aside
+          className="mt-12 pt-8 border-t border-border"
+          aria-label="About the author"
+        >
+          <div className="flex items-center gap-4">
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border bg-muted">
+              <Image
+                src="/jaxon-parrott.png"
+                alt="Jaxon Parrott"
+                fill
+                className="object-cover"
+                sizes="56px"
+              />
+            </div>
+            <div>
+              <p className="font-ui font-medium text-foreground">Jaxon Parrott</p>
+              <p className="text-sm font-ui text-muted-foreground">
+                Founder & CEO, AuthorityTech
+              </p>
+            </div>
+          </div>
+        </aside>
       </article>
 
       <footer className="border-t border-border mt-24 bg-background">
