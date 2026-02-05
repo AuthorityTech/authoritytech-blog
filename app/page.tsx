@@ -1,7 +1,41 @@
 import { getAllPosts } from "@/lib/sheets";
 import { BlogContent } from "@/components/blog-content";
+import type { Metadata } from "next";
 
 export const revalidate = 300; // Revalidate every 5 minutes
+
+const BASE_URL = "https://blog.authoritytech.io";
+
+export const metadata: Metadata = {
+  title: "AuthorityTech Blog | Performance PR & AI Visibility",
+  description:
+    "Daily insights at the intersection of performance PR and AI visibility. Practical guidance for founders on earned media and how PR actually works.",
+  alternates: {
+    canonical: BASE_URL,
+  },
+  openGraph: {
+    title: "AuthorityTech Blog | Performance PR & AI Visibility",
+    description:
+      "Daily insights at the intersection of performance PR and AI visibility. Practical guidance for founders on earned media and how PR actually works.",
+    url: BASE_URL,
+    type: "website",
+    images: [
+      {
+        url: `${BASE_URL}/blog-hero.png`,
+        width: 1200,
+        height: 630,
+        alt: "AuthorityTech Blog",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AuthorityTech Blog | Performance PR & AI Visibility",
+    description:
+      "Daily insights at the intersection of performance PR and AI visibility. Practical guidance for founders on earned media and how PR actually works.",
+    images: [`${BASE_URL}/blog-hero.png`],
+  },
+};
 
 export default async function Home() {
   const posts = await getAllPosts();

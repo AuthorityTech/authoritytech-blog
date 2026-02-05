@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug } from '@/lib/sheets';
+import { normalizeBlogPostJsonLd } from '@/lib/utils';
 import type { Metadata } from 'next';
 
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -17,6 +18,8 @@ export async function generateStaticParams() {
   }));
 }
 
+const BASE_URL = 'https://blog.authoritytech.io';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
@@ -27,15 +30,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const postUrl = `${BASE_URL}/${slug}`;
+
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
+      url: postUrl,
       images: post.featuredImage ? [post.featuredImage] : [],
       type: 'article',
       publishedTime: post.publishDate,
+      authors: ['Jaxon Parrott'],
     },
     twitter: {
       card: 'summary_large_image',
@@ -54,12 +64,16 @@ export default async function BlogPost({ params }: Props) {
     notFound();
   }
 
+  const jsonLd = post.jsonLdSchema
+    ? normalizeBlogPostJsonLd(post.jsonLdSchema, slug, post.publishDate)
+    : null;
+
   return (
     <div className="min-h-dvh bg-background">
-      {post.jsonLdSchema && (
+      {jsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: post.jsonLdSchema }}
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
       )}
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
