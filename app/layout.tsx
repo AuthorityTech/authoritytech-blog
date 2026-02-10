@@ -38,7 +38,7 @@ export default function RootLayout({
         "name": "Machine Relations (MR) Insights",
         "url": "https://blog.authoritytech.io",
         "description": "Daily high-frequency intelligence on Machine Relations (MR) and Generative Engine Optimization (GEO) authored by Jaxon Parrott.",
-        "keywords": "Machine Relations, MR, GEO, Generative Engine Optimization, AI Visibility, AI Search Citations",
+        "keywords": "Machine Relations, MR, GEO, AI-Native, AI Search Citations",
         "publisher": {
           "@type": "Organization",
           "@id": "https://authoritytech.io/#organization",
@@ -85,12 +85,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      {/* CRITICAL FIX: Removed 'font-ui' and 'bg-background' from body 
-          to let ThemeProviders handle the dynamic dark mode styling.
-      */}
-      <body className="antialiased font-sans">
-        <ThemeProviders attribute="class" defaultTheme="dark" enableSystem>
-          <div className="flex min-h-screen flex-col bg-background">
+      <body className="antialiased">
+        <ThemeProviders>
+          {/* We wrap in a dark-themed div to force the 'AI-Native' look without breaking Typescript */}
+          <div className="dark flex min-h-screen flex-col bg-background text-foreground">
             <SiteHeader />
             <main className="flex-1 pt-14">{children}</main>
           </div>
