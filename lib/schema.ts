@@ -8,10 +8,16 @@ const AUTHOR = {
   "@type": "Person" as const,
   name: "Jaxon Parrott",
   url: "https://jaxonparrott.com",
+  jobTitle: "Founder & CEO",
+  worksFor: {
+    "@id": "https://authoritytech.io/#organization",
+  },
   sameAs: [
     "https://x.com/jaxonparrott",
     "https://linkedin.com/in/jaxonparrott",
     "https://github.com/jaxonparrott",
+    "https://www.entrepreneur.com/author/jaxon-parrott",
+    "https://www.crunchbase.com/person/jaxon-parrott",
   ],
 };
 
@@ -29,6 +35,8 @@ const PUBLISHER = {
     "https://x.com/authoritytechio",
     "https://linkedin.com/company/authoritytech",
     "https://github.com/AuthorityTech",
+    "https://www.inc.com/profile/authoritytech",
+    "https://www.crunchbase.com/organization/authoritytech",
   ],
 };
 
@@ -158,4 +166,3 @@ export function generateJsonLd(post: BlogPost): string {
     "@graph": graph,
   });
 }
-
