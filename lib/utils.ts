@@ -7,43 +7,87 @@ export function cn(...inputs: ClassValue[]) {
 
 const BLOG_BASE_URL = "https://blog.authoritytech.io";
 
+type JsonNode = Record<string, unknown>;
+
 /**
- * Returns true if a node is a valid FAQPage with at least one well-formed Question.
+ * Returns true if the node's @type is or includes FAQPage.
  */
-function isValidFaqPage(node: Record<string, unknown>): boolean {
+function isFaqNode(node: JsonNode): boolean {
   const t = node["@type"];
-  const isFaq =
-    t === "FAQPage" ||
-    (Array.isArray(t) && t.includes("FAQPage"));
-  if (!isFaq) return true; // not an FAQ node — keep it
+  return t === "FAQPage" || (Array.isArray(t) && t.includes("FAQPage"));
+}
 
+/**
+ * Extract valid Question entries from an FAQPage node's mainEntity.
+ */
+function extractValidQuestions(node: JsonNode): JsonNode[] {
   const mainEntity = node.mainEntity;
-  if (!Array.isArray(mainEntity) || mainEntity.length === 0) return false;
+  if (!Array.isArray(mainEntity)) return [];
 
-  // Keep only questions that have both a non-empty name and answer text
-  const validQuestions = (mainEntity as Record<string, unknown>[]).filter(
+  return (mainEntity as JsonNode[]).filter(
     (q) =>
       q["@type"] === "Question" &&
       typeof q.name === "string" &&
       q.name.trim().length > 0 &&
       q.acceptedAnswer &&
-      typeof (q.acceptedAnswer as Record<string, unknown>).text === "string" &&
-      ((q.acceptedAnswer as Record<string, unknown>).text as string).trim()
-        .length > 0
+      typeof (q.acceptedAnswer as JsonNode).text === "string" &&
+      ((q.acceptedAnswer as JsonNode).text as string).trim().length > 0
   );
+}
 
-  if (validQuestions.length === 0) return false;
+/**
+ * Merge all FAQPage nodes in a @graph into a single FAQPage node.
+ * Removes duplicates and empty questions. Returns null if no valid questions.
+ */
+function mergeFaqNodes(graph: JsonNode[]): {
+  faqNode: JsonNode | null;
+  rest: JsonNode[];
+} {
+  const faqNodes: JsonNode[] = [];
+  const rest: JsonNode[] = [];
 
-  // Mutate in place to keep only valid questions
-  node.mainEntity = validQuestions;
-  return true;
+  for (const node of graph) {
+    if (isFaqNode(node)) {
+      faqNodes.push(node);
+    } else {
+      rest.push(node);
+    }
+  }
+
+  if (faqNodes.length === 0) return { faqNode: null, rest };
+
+  // Collect all valid questions across all FAQ nodes
+  const allQuestions: JsonNode[] = [];
+  const seen = new Set<string>();
+
+  for (const faq of faqNodes) {
+    for (const q of extractValidQuestions(faq)) {
+      // Deduplicate by question name (case-insensitive)
+      const key = (q.name as string).trim().toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        allQuestions.push(q);
+      }
+    }
+  }
+
+  if (allQuestions.length === 0) return { faqNode: null, rest };
+
+  return {
+    faqNode: {
+      "@type": "FAQPage",
+      mainEntity: allQuestions,
+    },
+    rest,
+  };
 }
 
 /**
  * Normalizes JSON-LD from the sheet so required SEO fields are always correct:
  * mainEntityOfPage (blog.authoritytech.io), dateModified, author (Person).
  * Handles both flat schemas and @graph-based schemas.
- * Strips invalid/empty FAQPage nodes to prevent GSC errors.
+ * Merges multiple FAQPage nodes into one to prevent GSC "duplicate FAQPage" errors.
+ * Strips FAQPage entries with empty/invalid questions.
  */
 export function normalizeBlogPostJsonLd(
   jsonLdSchema: string,
@@ -51,20 +95,20 @@ export function normalizeBlogPostJsonLd(
   publishDate: string
 ): string {
   try {
-    const data = JSON.parse(jsonLdSchema) as Record<string, unknown>;
+    const data = JSON.parse(jsonLdSchema) as JsonNode;
     const postUrl = `${BLOG_BASE_URL}/${slug}`;
 
-    // Determine the target node: if @graph exists, find the Article/BlogPosting node
-    let target: Record<string, unknown> = data;
+    let target: JsonNode = data;
 
     if (Array.isArray(data["@graph"])) {
-      // Filter out invalid FAQ nodes from the graph
-      data["@graph"] = (data["@graph"] as Record<string, unknown>[]).filter(
-        isValidFaqPage
-      );
+      const graph = data["@graph"] as JsonNode[];
 
-      const graph = data["@graph"] as Record<string, unknown>[];
-      const article = graph.find((node) => {
+      // Merge all FAQPage nodes into one (or remove if no valid questions)
+      const { faqNode, rest } = mergeFaqNodes(graph);
+      data["@graph"] = faqNode ? [...rest, faqNode] : rest;
+
+      const updatedGraph = data["@graph"] as JsonNode[];
+      const article = updatedGraph.find((node) => {
         const t = node["@type"];
         return (
           t === "Article" ||
@@ -76,12 +120,11 @@ export function normalizeBlogPostJsonLd(
       if (article) {
         target = article;
       }
-    } else {
-      // Flat schema — if it's an FAQPage itself, validate it
-      if (!isValidFaqPage(data)) {
-        // Invalid FAQ-only schema — return empty
-        return "";
-      }
+    } else if (isFaqNode(data)) {
+      // Flat schema that is itself an FAQPage — validate it
+      const questions = extractValidQuestions(data);
+      if (questions.length === 0) return "";
+      data.mainEntity = questions;
     }
 
     target.mainEntityOfPage = {
