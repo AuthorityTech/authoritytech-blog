@@ -85,10 +85,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased font-ui text-foreground bg-background">
-        <ThemeProviders>
-          <SiteHeader />
-          <div className="relative z-10 pt-14">{children}</div>
+      {/* CRITICAL FIX: Removed 'font-ui' and 'bg-background' from body 
+          to let ThemeProviders handle the dynamic dark mode styling.
+      */}
+      <body className="antialiased font-sans">
+        <ThemeProviders attribute="class" defaultTheme="dark" enableSystem>
+          <div className="flex min-h-screen flex-col bg-background">
+            <SiteHeader />
+            <main className="flex-1 pt-14">{children}</main>
+          </div>
         </ThemeProviders>
       </body>
     </html>
