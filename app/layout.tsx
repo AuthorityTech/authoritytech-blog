@@ -43,7 +43,7 @@ export default function RootLayout({
           "@type": "Organization",
           "@id": "https://authoritytech.io/#organization",
           "name": "AuthorityTech",
-          "alternateName": "The First Machine Relations Agency",
+          "alternateName": "The First AI-Native Machine Relations Agency",
           "url": "https://authoritytech.io"
         },
         "author": [
