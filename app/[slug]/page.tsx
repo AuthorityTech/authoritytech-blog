@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug } from '@/lib/sheets';
-import { normalizeBlogPostJsonLd } from '@/lib/utils';
+import { generateJsonLd } from '@/lib/schema';
 import type { Metadata } from 'next';
 
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -64,18 +64,15 @@ export default async function BlogPost({ params }: Props) {
     notFound();
   }
 
-  const jsonLd = post.jsonLdSchema
-    ? normalizeBlogPostJsonLd(post.jsonLdSchema, slug, post.publishDate)
-    : null;
+  // Code-generated schema — deterministic, always valid
+  const jsonLd = generateJsonLd(post);
 
   return (
     <div className="min-h-dvh bg-background">
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd }}
+      />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
         <div className="mb-10">
           <Link
