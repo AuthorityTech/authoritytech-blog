@@ -13,11 +13,13 @@ const AUTHOR = {
     "@id": "https://authoritytech.io/#organization",
   },
   sameAs: [
+    "https://jaxonparrott.com",
+    "https://www.linkedin.com/in/jaxon-parrott-b91838128/",
     "https://x.com/jaxonparrott",
-    "https://linkedin.com/in/jaxonparrott",
     "https://github.com/jaxonparrott",
     "https://www.entrepreneur.com/author/jaxon-parrott",
     "https://www.crunchbase.com/person/jaxon-parrott",
+    "https://medium.com/@jaxon-parrott",
   ],
 };
 
@@ -33,11 +35,32 @@ const PUBLISHER = {
   },
   sameAs: [
     "https://machinerelations.ai",
+    "https://curated.authoritytech.io",
+    "https://blog.authoritytech.io",
+    "https://www.linkedin.com/company/authoritytech",
     "https://x.com/authoritytechio",
-    "https://linkedin.com/company/authoritytech",
     "https://github.com/AuthorityTech",
-    "https://www.inc.com/profile/authoritytech",
+    "https://github.com/AuthorityTech/prstack",
+    "https://medium.com/authoritytech",
     "https://www.crunchbase.com/organization/authoritytech",
+    "https://www.inc.com/profile/authoritytech",
+    "https://theorg.com/org/authoritytech",
+  ],
+};
+
+const CO_AUTHOR = {
+  "@type": "Person" as const,
+  "@id": "https://team.authoritytech.io/#christian",
+  name: "Christian Lehman",
+  jobTitle: "CGO & MR Growth Strategist",
+  url: "https://team.authoritytech.io",
+  worksFor: {
+    "@id": "https://authoritytech.io/#organization",
+  },
+  sameAs: [
+    "https://www.linkedin.com/in/christianhlehman/",
+    "https://x.com/christianlehman",
+    "https://medium.com/@christian-lehman",
   ],
 };
 
