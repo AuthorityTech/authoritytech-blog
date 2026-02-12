@@ -10,8 +10,10 @@
   --border: #e4e4e7;
   --muted-foreground: #71717a;
   --heading-foreground: #18181b;
-  --accent: #b49a60;
-  --accent-muted: rgba(180, 154, 96, 0.12);
+  --link: #32607F;
+  --link-muted: rgba(50, 96, 127, 0.12);
+  --accent: #B88652;
+  --accent-muted: rgba(184, 133, 82, 0.12);
 }
 
 html.dark {
@@ -22,8 +24,10 @@ html.dark {
   --border: #2a2828;
   --muted-foreground: #a1a1aa;
   --heading-foreground: #fafafa;
-  --accent: #b49a60;
-  --accent-muted: rgba(180, 154, 96, 0.1);
+  --link: #32607F;
+  --link-muted: rgba(50, 96, 127, 0.2);
+  --accent: #F5E0B3;
+  --accent-muted: rgba(245, 224, 179, 0.1);
 }
 
 body {
@@ -70,16 +74,16 @@ body {
 
 /* Links — warm accent, not generic blue */
 .prose a {
-  color: var(--accent);
+  color: var(--link);
   text-decoration: underline;
   text-underline-offset: 2px;
-  text-decoration-color: var(--accent-muted);
+  text-decoration-color: var(--link-muted);
   font-weight: 500;
   transition: text-decoration-color 150ms ease;
 }
 
 .prose a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--link);
 }
 
 .prose ul,
