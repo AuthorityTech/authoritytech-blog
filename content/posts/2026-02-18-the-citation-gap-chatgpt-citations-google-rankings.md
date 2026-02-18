@@ -4,7 +4,7 @@ slug: "the-citation-gap-chatgpt-citations-google-rankings"
 date: "2026-02-18"
 description: "New data reveals 80% of ChatGPT's most-cited pages don't rank in Google's top 100. We break down the Citation Gap — why it exists and the exact content architecture that closes it."
 topic: "Machine Relations"
-featured_image: "https://storage.googleapis.com/authoritytech-prod-assets/public/cdn/the-citation-gap-chatgpt-citations-google-rankings-hero.png"
+featured_image: "https://storage.googleapis.com/authoritytech-prod-assets/public/cdn/2026-02-18-12-12-00-citation-gap-hero.png"
 featured_image_alt: "The Citation Gap — ChatGPT citations vs Google rankings visualization"
 author: "Jaxon Parrott"
 ---
