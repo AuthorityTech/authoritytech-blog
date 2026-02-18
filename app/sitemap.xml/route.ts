@@ -1,9 +1,7 @@
-import { getAllPosts } from '@/lib/sheets';
-
-export const revalidate = 3600;
+import { getAllPosts } from '@/lib/posts';
 
 export async function GET() {
-  const posts = await getAllPosts();
+  const posts = getAllPosts();
   const baseUrl = 'https://blog.authoritytech.io';
 
   const postEntries = posts

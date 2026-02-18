@@ -1,8 +1,6 @@
-import { getAllPosts } from "@/lib/sheets";
+import { getAllPosts } from "@/lib/posts";
 import { BlogContent } from "@/components/blog-content";
 import type { Metadata } from "next";
-
-export const revalidate = 300; // Revalidate every 5 minutes
 
 const BASE_URL = "https://blog.authoritytech.io";
 
@@ -38,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const posts = await getAllPosts();
+  const posts = getAllPosts();
 
   return (
     <div className="min-h-dvh bg-background">

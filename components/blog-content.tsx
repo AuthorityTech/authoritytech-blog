@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import type { BlogPost } from "@/lib/sheets";
+import type { BlogPost } from "@/lib/posts";
 
 const POSTS_PER_PAGE = 9;
 

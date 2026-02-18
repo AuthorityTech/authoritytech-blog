@@ -1,18 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllPosts, getPostBySlug } from '@/lib/sheets';
+import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { generateJsonLd } from '@/lib/schema';
 import type { Metadata } from 'next';
-
-export const revalidate = 300; // Revalidate every 5 minutes
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
+  const posts = getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -22,7 +20,7 @@ const BASE_URL = 'https://blog.authoritytech.io';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -58,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPost({ params }: Props) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     notFound();

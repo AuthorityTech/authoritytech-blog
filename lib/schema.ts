@@ -1,4 +1,4 @@
-import type { BlogPost } from "./sheets";
+import type { BlogPost } from "./posts";
 
 const BLOG_BASE_URL = "https://blog.authoritytech.io";
 
