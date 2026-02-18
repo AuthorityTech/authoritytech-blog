@@ -1,6 +1,12 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeRaw from "rehype-raw";
+import rehypeStringify from "rehype-stringify";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
@@ -17,6 +23,17 @@ export interface BlogPost {
   topic?: string;
 }
 
+async function toHtml(content: string): Promise<string> {
+  const result = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeStringify)
+    .process(content);
+  return String(result);
+}
+
 function getPostFiles(): string[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
   return fs
@@ -26,7 +43,7 @@ function getPostFiles(): string[] {
     .reverse();
 }
 
-function parsePost(filename: string): BlogPost {
+function parsePostRaw(filename: string): { post: BlogPost; rawContent: string } {
   const filepath = path.join(POSTS_DIR, filename);
   const raw = fs.readFileSync(filepath, "utf-8");
   const { data, content } = matter(raw);
@@ -39,47 +56,58 @@ function parsePost(filename: string): BlogPost {
     : "";
 
   return {
-    title: data.title || "",
-    slug,
-    description: data.description || "",
-    featuredImage: data.featured_image || "",
-    featuredImageAlt: data.featured_image_alt || "",
-    featuredImageFilename: "",
-    publishDate: date,
-    body: content.trim(),
-    jsonLdSchema: data.json_ld || "",
-    topic: data.topic || "",
+    rawContent: content.trim(),
+    post: {
+      title: data.title || "",
+      slug,
+      description: data.description || "",
+      featuredImage: data.featured_image || "",
+      featuredImageAlt: data.featured_image_alt || "",
+      featuredImageFilename: "",
+      publishDate: date,
+      body: content.trim(), // replaced below if markdown
+      jsonLdSchema: data.json_ld || "",
+      topic: data.topic || "",
+    },
   };
+}
+
+/** Returns true if content appears to be HTML (not raw markdown). */
+function isHtml(content: string): boolean {
+  return /^\s*</.test(content);
 }
 
 export function getAllPosts(): BlogPost[] {
   return getPostFiles()
-    .map((f) => parsePost(f))
+    .map((f) => parsePostRaw(f).post)
     .filter((p) => p.slug && p.title)
     .sort((a, b) => b.publishDate.localeCompare(a.publishDate));
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const files = getPostFiles();
   for (const f of files) {
-    const post = parsePost(f);
-    if (post.slug === slug) return post;
+    const { post, rawContent } = parsePostRaw(f);
+    if (post.slug === slug) {
+      post.body = isHtml(rawContent) ? rawContent : await toHtml(rawContent);
+      return post;
+    }
   }
   return null;
 }
 
 export function getAllSlugs(): string[] {
-  return getPostFiles().map((f) => parsePost(f).slug);
+  return getPostFiles().map((f) => parsePostRaw(f).post.slug);
 }
 
 /** Return raw content + frontmatter for a slug (for LLM endpoints). */
 export function getRawContent(slug: string): { meta: Omit<BlogPost, "body">; content: string } | null {
   const files = getPostFiles();
   for (const f of files) {
-    const post = parsePost(f);
+    const { post, rawContent } = parsePostRaw(f);
     if (post.slug === slug) {
       const { body, ...meta } = post;
-      return { meta, content: body };
+      return { meta, content: rawContent };
     }
   }
   return null;
