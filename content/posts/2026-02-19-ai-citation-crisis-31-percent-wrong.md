@@ -3,10 +3,10 @@ title: "The AI Citation Crisis: 31% of What AI Tells Buyers About Your Brand Is 
 slug: "ai-citation-crisis-31-percent-wrong"
 description: "New PAN Communications research reveals 31% of AI-generated citations about B2B tech brands are wrong or hallucinated. Machine Relations is the only durable fix."
 topic: "Machine Relations"
-publishDate: "2026-02-19"
+date: "2026-02-19"
 author: "Jaxon Parrott"
-image: "https://storage.googleapis.com/authoritytech-prod-assets/public/cdn/blog/2026-02-19-ai-citation-crisis-31-percent-wrong.png"
-imageAlt: "Fragmented citation document symbolizing AI hallucination and citation errors in B2B brand research"
+featured_image: "https://storage.googleapis.com/authoritytech-prod-assets/public/cdn/blog/2026-02-19-ai-citation-crisis-31-percent-wrong.png"
+featured_image_alt: "Fragmented document breaking apart into disconnected pieces representing hallucinated AI citations and citation errors for B2B brands"
 ---
 
 <p>Your potential customer just asked ChatGPT to evaluate your company before a sales call. The AI gave them an answer. It cited sources. It sounded authoritative and precise. And nearly one-third of what it said was factually wrong — sourced from hallucinated URLs that don't exist, or misattributed to companies that aren't you.</p>
