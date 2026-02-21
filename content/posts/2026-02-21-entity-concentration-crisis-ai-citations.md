@@ -5,7 +5,7 @@ description: "Top 10 experts now capture 59.5% of all AI citations — up from 3
 topic: machine-relations
 date: 2026-02-21
 author: jaxon-parrott
-featured_image: https://storage.googleapis.com/authoritytech-media/blog/2026-02-21-entity-concentration-crisis-ai-citations/hero.png
+featured_image: https://storage.googleapis.com/authoritytech-prod-assets/public/cdn/2026-02-21-entity-concentration-crisis-ai-citations-hero.png
 featured_image_alt: "Graph showing AI citation concentration — top 10 brands capturing 59.5% of all citations"
 ---
 
